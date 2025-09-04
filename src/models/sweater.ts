@@ -1,8 +1,9 @@
-// Sweater.ts - Concrete Decorator
-import { Clothing } from "./Clothing";
-import { Person } from "./Person";
+import { Clothing } from "./clothing";
+import { Person } from "./person";
 
 export class Sweater extends Clothing {
+  private readonly warmthValue = 20;
+
   constructor(person: Person) {
     super(person);
   }
@@ -12,6 +13,6 @@ export class Sweater extends Clothing {
   }
 
   getWarmth(): number {
-    return this.person.getWarmth() + 20; // Adds 20 warmth
+    return this.person.getWarmth() + this.warmthValue;
   }
 }

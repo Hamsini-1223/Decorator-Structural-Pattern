@@ -1,23 +1,20 @@
 {
   "name": "decorator-pattern-clothing",
   "version": "1.0.0",
-  "description": "Simple Decorator Pattern - Clothing Example",
-  "main": "main.js",
+  "description": "TypeScript implementation of the Decorator pattern using a clothing analogy",
+  "main": "dist/demos/interactiveDemo.js",
   "scripts": {
-    "build": "tsc *.ts",
-    "start": "node main.js",
-    "demo": "node demo.js",
-    "interactive": "tsc *.ts && node main.js",
-    "simple": "tsc *.ts && node demo.js",
-    "clean": "rm -f *.js"
+    "build": "tsc",
+    "start": "npm run build && node dist/demos/interactiveDemo.js",
+    "interactive": "npm run build && node dist/demos/interactiveDemo.js",
+    "simple": "npm run build && node dist/demos/simpleDemo.js",
+    "clean": "rm -rf dist"
   },
   "keywords": [
     "decorator-pattern",
     "design-patterns",
-    "typescript",
-    "clothing-example"
+    "typescript"
   ],
-  "author": "Your Name",
   "license": "MIT",
   "devDependencies": {
     "typescript": "^5.0.0",

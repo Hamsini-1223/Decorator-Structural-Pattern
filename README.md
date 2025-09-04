@@ -1,155 +1,188 @@
 # Decorator Pattern - Clothing Example
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
-[![Built by](https://img.shields.io/badge/Built%20by-Ms%20Hamsini%20S-brightgreen.svg)]()
-
 A TypeScript implementation of the Decorator structural design pattern using a clothing analogy.
 
 ## Overview
 
-The Decorator pattern allows you to add new behaviors to objects by placing them inside wrapper objects that contain the behaviors. This implementation uses the intuitive concept of putting on clothes to demonstrate how decorators work.
-
-## Pattern Analogy
-
-- **BasicPerson** - A person without clothes (0 warmth)
-- **Sweater** - Adds 20 warmth points
-- **Jacket** - Adds 30 warmth points
-- **Hat** - Adds 10 warmth points
-
-Each clothing item "decorates" the person with additional warmth while maintaining the same interface.
+The Decorator pattern allows you to add new behaviors to objects by placing them inside wrapper objects that contain the behaviors. This implementation uses the concept of putting on clothes to demonstrate how decorators work.
 
 ## Installation
 
 ```bash
-git clone https://github.com/your-username/decorator-pattern-clothing.git
-cd decorator-pattern-clothing
 npm install
 ```
 
 ## Usage
 
 ### Interactive Demo
-
 ```bash
 npm run interactive
 ```
 
 ### Simple Demo
-
 ```bash
 npm run simple
 ```
 
+## How It Works
+
+The Decorator pattern creates a chain of wrapper objects, each adding functionality to the base object. In this example:
+
+1. **BasicPerson** - The core component with no clothing (warmth: 0)
+2. **Sweater** - Adds 20 warmth and updates the description
+3. **Jacket** - Adds 30 warmth and updates the description  
+4. **Hat** - Adds 10 warmth and updates the description
+
+Each decorator wraps the previous object, creating a layered effect where behaviors are combined dynamically.
+
 ## Code Example
 
 ```typescript
-import { BasicPerson, Sweater, Jacket, Hat } from "./";
+import { BasicPerson } from "./src/models/basicPerson";
+import { Sweater } from "./src/models/sweater";
+import { Jacket } from "./src/models/jacket";
+import { Hat } from "./src/models/hat";
 
 // Start with a basic person
 let person = new BasicPerson("John");
-console.log(person.getDescription()); // "John"
-console.log(person.getWarmth()); // 0
+console.log(person.getDescription()); 
+console.log(`Warmth: ${person.getWarmth()}`);
 
-// Add clothing layers
+// Add clothing layers one by one
 person = new Sweater(person);
-person = new Jacket(person);
-person = new Hat(person);
+console.log(person.getDescription());
+console.log(`Warmth: ${person.getWarmth()}`);
 
-console.log(person.getDescription()); // "John + Sweater + Jacket + Hat"
-console.log(person.getWarmth()); // 60
+person = new Jacket(person);
+console.log(person.getDescription());
+console.log(`Warmth: ${person.getWarmth()}`);
+
+person = new Hat(person);
+console.log(person.getDescription());
+console.log(`Warmth: ${person.getWarmth()}`);
+```
+
+### Output
+
+```
+John
+Warmth: 0
+John + Sweater
+Warmth: 20
+John + Sweater + Jacket
+Warmth: 50
+John + Sweater + Jacket + Hat
+Warmth: 60
+```
+
+### Alternative Composition
+
+You can also compose decorators in different orders or combinations:
+
+```typescript
+// Different layering approach
+let person2 = new BasicPerson("Sarah");
+person2 = new Hat(new Jacket(new Sweater(person2)));
+console.log(person2.getDescription()); // "Sarah + Sweater + Jacket + Hat"
+console.log(`Warmth: ${person2.getWarmth()}`); // Warmth: 60
+
+// Minimal clothing
+let person3 = new BasicPerson("Mike");
+person3 = new Hat(person3);
+console.log(person3.getDescription()); // "Mike + Hat"
+console.log(`Warmth: ${person3.getWarmth()}`); // Warmth: 10
 ```
 
 ## Project Structure
 
 ```
-├── Person.ts          # Component interface
-├── BasicPerson.ts     # Concrete component
-├── Clothing.ts        # Base decorator
-├── Sweater.ts         # Concrete decorator (+20 warmth)
-├── Jacket.ts          # Concrete decorator (+30 warmth)
-├── Hat.ts             # Concrete decorator (+10 warmth)
-├── main.ts            # Interactive console demo
-├── demo.ts            # Simple demonstration
-├── package.json       # Project configuration
-└── tsconfig.json      # TypeScript configuration
+src/
+├── models/
+│   ├── person.ts          # Component interface
+│   ├── basicPerson.ts     # Concrete component
+│   ├── clothing.ts        # Base decorator
+│   ├── sweater.ts         # Concrete decorator (+20 warmth)
+│   ├── jacket.ts          # Concrete decorator (+30 warmth)
+│   └── hat.ts             # Concrete decorator (+10 warmth)
+├── demos/
+│   ├── interactiveDemo.ts # Interactive console demo
+│   └── simpleDemo.ts      # Basic demonstration
+└── utils/
+    └── errorHandler.ts    # Error handling utilities
+├── README.md
+├── package.json
+└── tsconfig.json
 ```
 
-## Class Diagram
+## Interactive Demo Output
+
+When you run `npm run interactive`, you'll see an interactive console interface:
 
 ```
-                    ┌─────────────────┐
-                    │   <<interface>> │
-                    │     Person      │
-                    ├─────────────────┤
-                    │ +getDescription │
-                    │ +getWarmth      │
-                    └─────────────────┘
-                             ▲
-                             │
-                    ┌────────┼────────┐
-                    │                 │
-       ┌─────────────────┐   ┌─────────────────┐
-       │   BasicPerson   │   │    Clothing     │
-       ├─────────────────┤   │ (BaseDecorator) │
-       │ - name          │   ├─────────────────┤
-       │ +getDescription │   │ # person        │
-       │ +getWarmth      │   │ +getDescription │
-       └─────────────────┘   │ +getWarmth      │
-                             └─────────────────┘
-                                      ▲
-                                      │
-                        ┌─────────────┼─────────────┐
-                        │             │             │
-            ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-            │    Sweater      │ │     Jacket      │ │      Hat        │
-            ├─────────────────┤ ├─────────────────┤ ├─────────────────┤
-            │ +getDescription │ │ +getDescription │ │ +getDescription │
-            │ +getWarmth      │ │ +getWarmth      │ │ +getWarmth      │
-            │   (+20)         │ │   (+30)         │ │   (+10)         │
-            └─────────────────┘ └─────────────────┘ └─────────────────┘
+INTERACTIVE DECORATOR PATTERN DEMO
+==================================
+Welcome to the Clothing Decorator Pattern!
+You can put on different clothes to stay warm.
+Each piece of clothing 'decorates' you with extra warmth!
+
+What's your name? John
+
+Hello John! You're starting with no clothes.
+
+Current Status: John
+Warmth Level: 0
+You're freezing! You need some clothes!
+
+=== What would you like to do? ===
+1. Put on a Sweater (+20 warmth)
+2. Put on a Jacket (+30 warmth)
+3. Put on a Hat (+10 warmth)
+4. Check current status
+5. Start over with a new person
+6. Exit
+=====================================
+
+Enter your choice (1-6): 1
+
+You put on a sweater!
+
+Current Status: John + Sweater
+Warmth Level: 20
+Still pretty cold. Maybe add more layers?
+
+=== What would you like to do? ===
+1. Put on a Sweater (+20 warmth)
+2. Put on a Jacket (+30 warmth)
+3. Put on a Hat (+10 warmth)
+4. Check current status
+5. Start over with a new person
+6. Exit
+=====================================
+
+Enter your choice (1-6): 2
+
+You put on a jacket!
+
+Current Status: John + Sweater + Jacket
+Warmth Level: 50
+Nice and warm! Perfect for cold weather.
 ```
-
-## Pattern Benefits
-
-### Without Decorator Pattern
-
-You would need separate classes for every combination:
-
-- PersonWithSweater
-- PersonWithJacket
-- PersonWithSweaterAndJacket
-- PersonWithSweaterAndJacketAndHat
-- etc.
-
-### With Decorator Pattern
-
-- Only 4 classes needed: BasicPerson, Sweater, Jacket, Hat
-- Infinite combinations possible
-- Runtime composition
-- Easy to extend with new clothing types
-
-## Key Concepts
-
-1. **Component Interface** (Person) - Defines operations for both wrapper and wrapped objects
-2. **Concrete Component** (BasicPerson) - Provides default implementation
-3. **Base Decorator** (Clothing) - Wraps component and delegates operations
-4. **Concrete Decorators** (Sweater, Jacket, Hat) - Add specific behaviors
 
 ## Scripts
 
 | Command               | Description                  |
-| --------------------- | ---------------------------- |
-| `npm run interactive` | Run interactive console demo |
-| `npm run simple`      | Run basic demonstration      |
-| `npm run build`       | Compile TypeScript           |
-| `npm run clean`       | Remove compiled files        |
+|----------------------|------------------------------|
+| `npm run interactive`| Run interactive console demo |
+| `npm run simple`     | Run basic demonstration      |
+| `npm run build`      | Compile TypeScript           |
+| `npm run clean`      | Remove compiled files        |
 
-## Real-World Applications
+## Pattern Benefits
 
-- Java I/O streams (BufferedReader, FileReader)
-- Web middleware (authentication, logging)
-- UI component enhancement
-- Database connection pooling
+- **Flexibility**: Compose behaviors at runtime
+- **Single Responsibility**: Each decorator has one purpose
+- **Open/Closed Principle**: Open for extension, closed for modification
+- **Dynamic Composition**: Add or remove behaviors without changing existing code
 
 ## Built by
 
